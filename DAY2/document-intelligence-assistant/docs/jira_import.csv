@@ -1,0 +1,23 @@
+Summary,Issue Type,Priority,Status,Labels,Description
+"Project scaffold: FastAPI app, config, Pydantic schemas",Task,High,Done,foundation,"app/main.py, config.py (.env), schemas.py"
+Prepare 3 sample vehicle service manuals (PDF),Task,High,Done,foundation,"Falcon X200 (petrol), Aurora E5 (electric), Nomad T300 (diesel pickup) in data/pdfs/"
+"PDF loader, chunker and indexer",Task,High,Done,ingestion,"Page-aware loading (PyMuPDF), 800/100 chunking, chunks stored with doc_id, filename, page"
+Ollama provider: chat (llama3.2) + embeddings (nomic-embed-text),Task,High,Done,ingestion,Single interface in app/llm/provider.py
+"LangGraph agent: retrieve, grade, decide_tool, answer, not_found",Task,High,Done,agent,Fallback answer when no chunk passes MAX_DISTANCE; citations from metadata
+"unit_convert tool (Nm/lbf-ft, psi/bar, L/gal, km/mi)",Task,Medium,Done,agent,app/agent/tools.py with unit tests
+"API routes: /ingest, /ask, /health (+ /documents list/delete)",Task,High,Done,api,Duplicate filename returns 409; /health reports Ollama status
+Ingestion script on 3+ PDFs (scripts/ingest_pdfs.py),Task,High,Done,ingestion,Skips already-ingested files; --dry-run mode; dry run verified on 3 PDFs
+Architecture diagram,Task,Medium,Done,docs,docs/architecture.png and .svg
+Draft 20-question eval set,Task,High,Done,evals,evals/dataset.jsonl: 17 answerable (4 need tool) + 3 not-in-manual; evidence pages verified against the PDFs
+Smoke test: oil-grade question answered with page citation,Task,Medium,Done,evals,Run manually in Swagger UI
+Run scripts.ingest_pdfs on all 3 PDFs on the local machine,Task,High,To Do,ingestion,Needs Ollama running with both models pulled
+Run baseline evals and record scores,Task,High,To Do,evals,python -m evals.run_evals; save results in evals/results/
+Tune MAX_DISTANCE and TOP_K using eval results,Task,High,To Do,evals,"Goal: citation hit >= 80%, refusal accuracy >= 90%"
+Improve tool-use reliability of small local model,Task,Medium,To Do,agent,Check tool_ok metric; tighten the decide_tool prompt
+Add question rewriting for follow-up questions (session_id),Task,Medium,Backlog,agent,Rewrite node before retrieve
+"Expand eval set to 40 questions, add multi-chunk questions",Task,Medium,Backlog,evals,Include cross-document comparison questions
+Dockerfile and docker-compose (API + Ollama),Task,Medium,Backlog,ship,Use /health for the container health check
+Streamed POST /ask (SSE) with citations + /ask/sync,Task,High,Done,api,Stretch goal
+Simple web frontend (upload + chat + citations),Task,Low,Backlog,ship,Stretch goal
+OCR support for scanned PDFs,Task,Low,Backlog,ingestion,Detect pages with no text
+"API tests for /ingest, /ask, /health",Task,Medium,Backlog,ship,Use FastAPI TestClient with Ollama mocked
